@@ -35,6 +35,12 @@ export class User {
   })
   role: UserRole;
 
+  @Column({ nullable: true })
+  resetToken: string;
+
+  @Column({ nullable: true })
+  resetTokenExpires: Date;
+
   @CreateDateColumn()
   createdAt: Date;
 
