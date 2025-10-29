@@ -29,7 +29,6 @@ export class User {
   forceLogout: boolean;
 
   @Column({
-    type: 'enum',
     enum: UserRole,
     default: UserRole.USER,
   })

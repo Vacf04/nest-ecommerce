@@ -9,13 +9,19 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { HashService } from 'src/common/hash/hash.service';
 import { LoginDto } from './dto/login-dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private readonly authRepository: Repository<User>,
     private readonly hashService: HashService,
+    private readonly jwtService: JwtService,
   ) {}
+
+  async findById(id: string) {
+    return await this.authRepository.findOneBy({ id });
+  }
 
   async register(dto: CreateUserDto) {
     const emailExists = await this.authRepository.exists({
@@ -61,6 +67,15 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password.');
     }
 
-    return 'logado';
+    const token = await this.jwtService.signAsync({
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    });
+    user.forceLogout = false;
+    await this.authRepository.save(user);
+    return {
+      token,
+    };
   }
 }

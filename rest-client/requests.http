@@ -1,0 +1,25 @@
+@baseUrl = http://localhost:3000
+@jwtToken = {{authLogin.response.body.token}}
+
+# AUTH ########################################################################
+
+### Auth login
+# @name authLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "vittorfranceschi04@gmail.com",
+    "password": "Password123@"
+}
+
+### Auth register
+# @name createUser
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "email": "vittorfranceschi04@gmail.com",
+    "password": "Password123@",
+    "name": "Vittor"
+}
