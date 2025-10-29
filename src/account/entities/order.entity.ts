@@ -3,7 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -20,7 +20,7 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => User, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
   user: User;
 
   @Column({ type: 'decimal' })
@@ -32,8 +32,13 @@ export class Order {
   })
   status: Status;
 
-  @Column()
-  shippingAdress: string;
+  @Column({ type: 'simple-json' })
+  shippingAddress: {
+    street: string;
+    city: string;
+    zipCode: string;
+    country: string;
+  };
 
   @CreateDateColumn()
   createdAt: Date;
