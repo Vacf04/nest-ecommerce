@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import { HashService } from 'src/common/hash/hash.service';
 
@@ -12,7 +12,7 @@ export class UserService {
     private readonly hashService: HashService,
   ) {}
 
-  async createCustomer(dto: CreateUserDto) {
+  async create(dto: CreateUserDto, role: UserRole) {
     const emailExists = await this.userRepository.exists({
       where: { email: dto.email },
     });
@@ -23,10 +23,11 @@ export class UserService {
 
     const hashedPassword = await this.hashService.hash(dto.password);
 
-    const user: CreateUserDto = {
+    const user = {
       email: dto.email,
       name: dto.name,
       password: hashedPassword,
+      role,
     };
 
     const createdUser = await this.save(user);
@@ -42,7 +43,7 @@ export class UserService {
     return await this.userRepository.findOneBy({ email });
   }
 
-  async save(user: CreateUserDto) {
+  async save(user: Partial<User>) {
     return await this.userRepository.save(user);
   }
 }

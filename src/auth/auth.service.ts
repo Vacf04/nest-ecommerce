@@ -4,6 +4,7 @@ import { LoginDto } from './dto/login-dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { HashService } from 'src/common/hash/hash.service';
+import { UserRole } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,7 @@ export class AuthService {
   ) {}
 
   async register(dto: CreateUserDto) {
-    this.userService.createCustomer(dto);
+    return await this.userService.create(dto, UserRole.USER);
   }
 
   async login(dto: LoginDto) {
