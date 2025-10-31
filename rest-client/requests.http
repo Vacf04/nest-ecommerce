@@ -9,7 +9,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-    "email": "vittorfranceschi04@gmail.com",
+    "email": "vittorfranceschi@gmail.com",
     "password": "Password123@"
 }
 
@@ -19,7 +19,7 @@ POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-    "email": "vittorfranceschi04@gmail.com",
+    "email": "vittorfranceschi@gmail.com",
     "password": "Password123@",
     "name": "Vittor"
 }
@@ -33,7 +33,7 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-    "email": "vittorfra@gmail.com",
+    "email": "admi@gmail.com",
     "password": "Password123@",
-    "name": "Vittor"
+    "name": "Admin"
 }
