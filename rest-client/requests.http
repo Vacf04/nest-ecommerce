@@ -1,6 +1,13 @@
 @baseUrl = http://localhost:3000
 @jwtToken = {{authLogin.response.body.token}}
 
+# STORE ########################################################################
+
+### Read One Product
+# @name readOneProduct
+GET {{baseUrl}}/store/products/4daba48b-8c0d-443c-bbf9-e40eecf72c30
+Content-Type: application/json
+
 # AUTH ########################################################################
 
 ### Auth login
@@ -36,4 +43,19 @@ Authorization: Bearer {{jwtToken}}
     "email": "admi@gmail.com",
     "password": "Password123@",
     "name": "Admin"
+}
+
+### Create Product
+# @name createProduct
+POST {{baseUrl}}/admin/products
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+    "name": "Get rich or die trying",
+    "description": "a good album",
+    "price": "2.99",
+    "stock": 100,
+    "imageUrl": "http://localhost:3000",
+    "categoryId": "a4c8b07e-3264-4418-aeb0-4d8308751ffb"
 }
