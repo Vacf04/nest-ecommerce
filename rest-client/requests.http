@@ -10,7 +10,7 @@ Content-Type: application/json
 
 ### Read All Products
 # @name readProducts
-GET {{baseUrl}}/store/products/?category=de8a44a1-1131-4584-83e2-22cebbe2b8d1
+GET {{baseUrl}}/store/products/
 Content-Type: application/json
 
 ### Read All Categories
@@ -67,8 +67,14 @@ Authorization: Bearer {{jwtToken}}
     "price": "1.99",
     "stock": 100,
     "imageUrl": "http://localhost:3000",
-    "categoryId": "de8a44a1-1131-4584-83e2-22cebbe2b8d1"
+    "categoryId": "42737ca9-696c-4b78-8a56-15765a5a8a6f"
 }
+
+### Delete Product
+# @name deleteProduct
+DELETE {{baseUrl}}/admin/products/94653241-b1a7-4de4-8af1-f6e238ef2488
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
 
 ### Create Category
 # @name createCategory
@@ -80,3 +86,9 @@ Authorization: Bearer {{jwtToken}}
     "name": "R&B",
     "slug": "R&B"
 }
+
+### Delete Category
+# @name deleteCategory
+DELETE {{baseUrl}}/admin/categories/42737ca9-696c-4b78-8a56-15765a5a8a6f
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}

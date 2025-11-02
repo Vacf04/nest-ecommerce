@@ -41,6 +41,11 @@ export class CategoryService {
     return await this.categoryRepository.save(newCategory);
   }
 
+  async delete(id: string) {
+    const category = await this.findByIdOrFail(id);
+    return await this.categoryRepository.remove(category);
+  }
+
   async read(query: CategoryQueryDto) {
     const { page, limit, search } = query;
 

@@ -69,4 +69,9 @@ export class ProductService {
     });
     return await this.productRepository.save(newProduct);
   }
+
+  async delete(id: string) {
+    const product = await this.findByIdOrFail(id);
+    return await this.productRepository.remove(product);
+  }
 }

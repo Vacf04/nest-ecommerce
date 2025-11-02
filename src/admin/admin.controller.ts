@@ -1,4 +1,11 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserResponseDto } from 'src/user/dto/user-response.dto';
@@ -33,9 +40,21 @@ export class AdminController {
     return new ProductResponseDto(product);
   }
 
+  @Delete('products/:id')
+  async deleteProduct(@Param('id') id: string) {
+    const product = await this.productService.delete(id);
+    return new ProductResponseDto(product);
+  }
+
   @Post('categories')
   async createCategory(@Body() dto: CreateCategoryDto) {
     const category = await this.categoryService.create(dto);
+    return new CategoryResponseDto(category);
+  }
+
+  @Delete('categories/:id')
+  async deleteCategory(@Param('id') id: string) {
+    const category = await this.categoryService.delete(id);
     return new CategoryResponseDto(category);
   }
 }
