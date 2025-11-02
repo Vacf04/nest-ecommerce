@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { CategoryService } from 'src/category/category.service';
+import { ProductQueryDto } from 'src/store/dto/product-query.dto';
+import { ProductResponseDto } from './dto/product-response.dto';
 
 @Injectable()
 export class ProductService {
@@ -24,6 +26,34 @@ export class ProductService {
     }
 
     return product;
+  }
+
+  async read(query: ProductQueryDto) {
+    const { page, limit, search, category, sortBy, sortOrder } = query;
+
+    const where: FindOptionsWhere<Product> = {};
+
+    if (search) where.name = Like(`%${search}%`);
+
+    if (category) where.category = { id: category };
+
+    const [data, total] = await this.productRepository.findAndCount({
+      where: where,
+      order: { [sortBy]: sortOrder },
+      take: limit,
+      skip: (page - 1) * limit,
+      relations: ['category'],
+    });
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: data.map((item) => new ProductResponseDto(item)),
+      totalItems: total,
+      itemsPerPage: limit,
+      currentPage: page,
+      totalPages: totalPages,
+    };
   }
 
   async readOne(productId: string) {

@@ -8,6 +8,11 @@
 GET {{baseUrl}}/store/products/4daba48b-8c0d-443c-bbf9-e40eecf72c30
 Content-Type: application/json
 
+### Read All Products
+# @name readProducts
+GET {{baseUrl}}/store/products/?sortBy=price&sortOrder=DESC&page=1
+Content-Type: application/json
+
 # AUTH ########################################################################
 
 ### Auth login
@@ -52,9 +57,9 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-    "name": "Get rich or die trying",
-    "description": "a good album",
-    "price": "2.99",
+    "name": "Blonde",
+    "description": "a perfect album",
+    "price": "1.99",
     "stock": 100,
     "imageUrl": "http://localhost:3000",
     "categoryId": "a4c8b07e-3264-4418-aeb0-4d8308751ffb"
