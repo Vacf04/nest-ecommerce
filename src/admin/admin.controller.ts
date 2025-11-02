@@ -8,6 +8,9 @@ import { ProductService } from 'src/product/product.service';
 import { ProductResponseDto } from 'src/product/dto/product-response.dto';
 import { UserService } from 'src/user/user.service';
 import { UserRole } from 'src/user/entities/user.entity';
+import { CategoryService } from 'src/category/category.service';
+import { CreateCategoryDto } from 'src/category/dto/create-category.dto';
+import { CategoryResponseDto } from 'src/category/dto/category-response.dto';
 
 @UseGuards(JwtAuthGuard, AdminGuard)
 @Controller('admin')
@@ -15,6 +18,7 @@ export class AdminController {
   constructor(
     private readonly productService: ProductService,
     private readonly userService: UserService,
+    private readonly categoryService: CategoryService,
   ) {}
 
   @Post('users')
@@ -27,5 +31,11 @@ export class AdminController {
   async createProduct(@Body() dto: CreateProductDto) {
     const product = await this.productService.create(dto);
     return new ProductResponseDto(product);
+  }
+
+  @Post('categories')
+  async createCategory(@Body() dto: CreateCategoryDto) {
+    const category = await this.categoryService.create(dto);
+    return new CategoryResponseDto(category);
   }
 }

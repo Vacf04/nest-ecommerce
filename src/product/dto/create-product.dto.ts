@@ -11,12 +11,12 @@ import {
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
-  @Length(5, 100)
+  @Length(1, 100)
   name: string;
 
   @IsString()
   @IsNotEmpty()
-  @Length(5, 500)
+  @Length(1, 500)
   description: string;
 
   @IsString()

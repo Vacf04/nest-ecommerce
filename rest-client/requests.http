@@ -10,7 +10,12 @@ Content-Type: application/json
 
 ### Read All Products
 # @name readProducts
-GET {{baseUrl}}/store/products/?sortBy=price&sortOrder=DESC&page=1
+GET {{baseUrl}}/store/products/?category=de8a44a1-1131-4584-83e2-22cebbe2b8d1
+Content-Type: application/json
+
+### Read All Categories
+# @name readCategories
+GET {{baseUrl}}/store/categories/
 Content-Type: application/json
 
 # AUTH ########################################################################
@@ -62,5 +67,16 @@ Authorization: Bearer {{jwtToken}}
     "price": "1.99",
     "stock": 100,
     "imageUrl": "http://localhost:3000",
-    "categoryId": "a4c8b07e-3264-4418-aeb0-4d8308751ffb"
+    "categoryId": "de8a44a1-1131-4584-83e2-22cebbe2b8d1"
+}
+
+### Create Category
+# @name createCategory
+POST {{baseUrl}}/admin/categories
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+    "name": "R&B",
+    "slug": "R&B"
 }
