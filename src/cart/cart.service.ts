@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { CreateCartItemDto } from './dto/create-cart-item.dto';
 import { UserService } from 'src/user/user.service';
 import { ProductService } from 'src/product/product.service';
+import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 
 @Injectable()
 export class CartService {
@@ -29,9 +30,10 @@ export class CartService {
 
     const cartItem = await this.cartItemRepository.findOne({
       where: {
-        product,
-        user,
+        product: { id: product.id },
+        user: { id: user.id },
       },
+      relations: ['user', 'product'],
     });
 
     if (cartItem) {
@@ -51,5 +53,48 @@ export class CartService {
       quantity: dto.quantity,
     });
     return await this.cartItemRepository.save(newCartItem);
+  }
+
+  async read(userId: string) {
+    const cartItems = await this.cartItemRepository.find({
+      where: { user: { id: userId } },
+      relations: ['user', 'product'],
+    });
+
+    if (!cartItems) {
+      throw new NotFoundException('You cart is empty.');
+    }
+
+    return cartItems;
+  }
+
+  async delete(userId: string, cartItemId: string) {
+    const cartItem = await this.cartItemRepository.findOne({
+      where: { user: { id: userId }, id: cartItemId },
+      relations: ['user', 'product'],
+    });
+
+    if (!cartItem) {
+      throw new NotFoundException('Item not found.');
+    }
+
+    return await this.cartItemRepository.remove(cartItem);
+  }
+
+  async update(userId: string, dto: UpdateCartItemDto, cartItemId: string) {
+    const cartItem = await this.cartItemRepository.findOne({
+      where: { user: { id: userId }, id: cartItemId },
+      relations: ['user', 'product'],
+    });
+
+    if (!cartItem)
+      throw new NotFoundException('This item does not exist in your cart.');
+
+    if (dto.quantity > cartItem.product.stock)
+      throw new BadRequestException('Quantity cannot be greater than stock.');
+
+    cartItem.quantity = dto.quantity ?? cartItem.quantity;
+
+    return await this.cartItemRepository.save(cartItem);
   }
 }

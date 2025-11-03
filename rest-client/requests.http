@@ -82,7 +82,7 @@ Authorization: Bearer {{jwtToken}}
 
 ### Delete Product
 # @name deleteProduct
-DELETE {{baseUrl}}/admin/products/94653241-b1a7-4de4-8af1-f6e238ef2488
+DELETE {{baseUrl}}/admin/products/ae563119-50fb-41be-a385-272d50222077
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
@@ -113,3 +113,38 @@ Authorization: Bearer {{jwtToken}}
 DELETE {{baseUrl}}/admin/categories/42737ca9-696c-4b78-8a56-15765a5a8a6f
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
+
+# ACCOUNT ########################################################################
+
+### Create Cart Item
+# @name createCartItem
+POST {{baseUrl}}/account/cart/items/
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+    "productId": "e44ec94d-645c-403d-a050-2aa0ef26e222",
+    "quantity": 5
+}
+
+### Read Cart Items
+# @name readCartItems
+GET {{baseUrl}}/account/cart
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+### Delete cart item
+# @name deleteCartItem
+DELETE {{baseUrl}}/account/cart/items/eca931d9-2ec9-4f78-87f5-9a5e663f4c91
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+### Update cart item
+# @name updateCartItem
+PATCH {{baseUrl}}/account/cart/items/eca931d9-2ec9-4f78-87f5-9a5e663f4c91
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+    "quantity": 99
+}

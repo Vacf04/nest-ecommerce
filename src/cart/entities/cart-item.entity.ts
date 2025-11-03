@@ -2,14 +2,15 @@ import { User } from 'src/user/entities/user.entity';
 import { Product } from 'src/product/entities/product.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-@Unique(['user', 'product'])
 export class CartItem {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -22,4 +23,10 @@ export class CartItem {
 
   @Column()
   quantity: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updateAt: Date;
 }
