@@ -8,6 +8,8 @@ import { AccountModule } from './account/account.module';
 import { UserModule } from './user/user.module';
 import { AdminModule } from './admin/admin.module';
 import { StoreModule } from './store/store.module';
+import { CartModule } from './cart/cart.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { StoreModule } from './store/store.module';
     UserModule,
     AdminModule,
     StoreModule,
+    CartModule,
+    OrderModule,
   ],
   controllers: [],
   providers: [],
