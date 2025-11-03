@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +19,8 @@ import { UserRole } from 'src/user/entities/user.entity';
 import { CategoryService } from 'src/category/category.service';
 import { CreateCategoryDto } from 'src/category/dto/create-category.dto';
 import { CategoryResponseDto } from 'src/category/dto/category-response.dto';
+import { UpdateProductDto } from 'src/product/dto/update-product.dto';
+import { UpdateCategoryDto } from 'src/category/dto/update-category.dto';
 
 @UseGuards(JwtAuthGuard, AdminGuard)
 @Controller('admin')
@@ -40,6 +43,12 @@ export class AdminController {
     return new ProductResponseDto(product);
   }
 
+  @Patch('products/:id')
+  async updateProduct(@Param('id') id: string, @Body() dto: UpdateProductDto) {
+    const product = await this.productService.update(id, dto);
+    return new ProductResponseDto(product);
+  }
+
   @Delete('products/:id')
   async deleteProduct(@Param('id') id: string) {
     const product = await this.productService.delete(id);
@@ -49,6 +58,15 @@ export class AdminController {
   @Post('categories')
   async createCategory(@Body() dto: CreateCategoryDto) {
     const category = await this.categoryService.create(dto);
+    return new CategoryResponseDto(category);
+  }
+
+  @Patch('categories/:id')
+  async updateCategory(
+    @Param('id') id: string,
+    @Body() dto: UpdateCategoryDto,
+  ) {
+    const category = await this.categoryService.update(id, dto);
     return new CategoryResponseDto(category);
   }
 

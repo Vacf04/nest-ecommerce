@@ -9,6 +9,7 @@ import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CategoryQueryDto } from 'src/store/dto/category-query.dto';
 import { CategoryResponseDto } from './dto/category-response.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -39,6 +40,24 @@ export class CategoryService {
     const newCategory = this.categoryRepository.create(dto);
 
     return await this.categoryRepository.save(newCategory);
+  }
+
+  async update(id: string, dto: UpdateCategoryDto) {
+    const exists = await this.categoryRepository.exists({
+      where: {
+        slug: dto.slug,
+      },
+    });
+
+    if (exists) {
+      throw new BadRequestException('This name of category already exists.');
+    }
+
+    const category = await this.findByIdOrFail(id);
+    category.name = dto.name ?? category.name;
+    category.slug = dto.slug ?? category.slug;
+
+    return await this.categoryRepository.save(category);
   }
 
   async delete(id: string) {

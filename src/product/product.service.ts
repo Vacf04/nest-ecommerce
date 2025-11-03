@@ -6,6 +6,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { CategoryService } from 'src/category/category.service';
 import { ProductQueryDto } from 'src/store/dto/product-query.dto';
 import { ProductResponseDto } from './dto/product-response.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -68,6 +69,24 @@ export class ProductService {
       category,
     });
     return await this.productRepository.save(newProduct);
+  }
+
+  async update(id: string, dto: UpdateProductDto) {
+    const product = await this.findByIdOrFail(id);
+    product.name = dto.name ?? product.name;
+    product.price = dto.price ?? product.price;
+    product.imageUrl = dto.imageUrl ?? product.imageUrl;
+    product.stock = dto.stock ?? product.stock;
+    product.description = dto.description ?? product.description;
+
+    if (dto.categoryId) {
+      const newCategory = await this.categoryService.findByIdOrFail(
+        dto.categoryId,
+      );
+      product.category = newCategory;
+    }
+
+    return await this.productRepository.save(product);
   }
 
   async delete(id: string) {

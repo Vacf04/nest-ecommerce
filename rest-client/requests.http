@@ -70,6 +70,16 @@ Authorization: Bearer {{jwtToken}}
     "categoryId": "42737ca9-696c-4b78-8a56-15765a5a8a6f"
 }
 
+### Update Product
+# @name updateProduct
+PATCH {{baseUrl}}/admin/products/e44ec94d-645c-403d-a050-2aa0ef26e222
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+    "name": "Blond"
+}
+
 ### Delete Product
 # @name deleteProduct
 DELETE {{baseUrl}}/admin/products/94653241-b1a7-4de4-8af1-f6e238ef2488
@@ -79,6 +89,17 @@ Authorization: Bearer {{jwtToken}}
 ### Create Category
 # @name createCategory
 POST {{baseUrl}}/admin/categories
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+    "name": "R&B",
+    "slug": "R&B"
+}
+
+### Update Category
+# @name updateCategory
+PATCH {{baseUrl}}/admin/categories/a4c8b07e-3264-4418-aeb0-4d8308751ffb
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
