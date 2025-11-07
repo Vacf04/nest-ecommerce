@@ -15,11 +15,16 @@ import { AuthenticatedRequest } from 'src/auth/types/authenticated-request.type'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CartItemResponseDto } from 'src/cart/dto/cart-item-response.dto';
 import { UpdateCartItemDto } from 'src/cart/dto/update-cart-item.dto';
+import { CreateOrderDto } from 'src/order/dto/create-order.dto';
+import { OrderService } from 'src/order/order.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('account')
 export class AccountController {
-  constructor(private readonly cartService: CartService) {}
+  constructor(
+    private readonly cartService: CartService,
+    private readonly orderService: OrderService,
+  ) {}
 
   @Post('cart/items')
   async createCartItem(
@@ -28,6 +33,15 @@ export class AccountController {
   ) {
     const cartItem = await this.cartService.create(req.user.id, dto);
     return new CartItemResponseDto(cartItem);
+  }
+
+  @Post('checkout')
+  async createOrder(
+    @Req() req: AuthenticatedRequest,
+    @Body() dto: CreateOrderDto,
+  ) {
+    const order = await this.orderService.create(req.user.id, dto);
+    return order;
   }
 
   @Get('cart')

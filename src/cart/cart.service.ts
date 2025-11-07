@@ -81,6 +81,11 @@ export class CartService {
     return await this.cartItemRepository.remove(cartItem);
   }
 
+  async deleteAllFromUser(userId: string) {
+    const cartItems = await this.cartItemRepository.findBy({ id: userId });
+    return await this.cartItemRepository.remove(cartItems);
+  }
+
   async update(userId: string, dto: UpdateCartItemDto, cartItemId: string) {
     const cartItem = await this.cartItemRepository.findOne({
       where: { user: { id: userId }, id: cartItemId },

@@ -29,6 +29,13 @@ export class ProductService {
     return product;
   }
 
+  async findById(id: string) {
+    return await this.productRepository.findOne({
+      where: { id },
+      relations: ['category'],
+    });
+  }
+
   async read(query: ProductQueryDto) {
     const { page, limit, search, category, sortBy, sortOrder } = query;
 
