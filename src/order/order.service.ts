@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Order } from './entities/order.entity';
+import { Order, Status } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
 import { UserService } from 'src/user/user.service';
 import { CartService } from 'src/cart/cart.service';
@@ -124,6 +124,62 @@ export class OrderService {
       }
 
       return order;
+    });
+  }
+
+  async readAll() {
+    return this.dataSource.transaction(async (manager) => {
+      const orders = await manager.find(Order, {
+        relations: ['orderItems', 'user'],
+      });
+
+      if (!orders) {
+        throw new NotFoundException('Orders not found.');
+      }
+
+      return orders;
+    });
+  }
+
+  async readOneAdmin(orderId: string) {
+    return this.dataSource.transaction(async (manager) => {
+      const order = await manager.findOne(Order, {
+        where: {
+          id: orderId,
+        },
+        relations: ['orderItems', 'user'],
+      });
+
+      if (!order) {
+        throw new NotFoundException('Order not found.');
+      }
+
+      return order;
+    });
+  }
+
+  async updateStatus(orderId: string, status: Status) {
+    return this.dataSource.transaction(async (manager) => {
+      const order = await manager.findOne(Order, {
+        where: {
+          id: orderId,
+        },
+        relations: ['orderItems', 'user'],
+      });
+
+      if (!order) {
+        throw new NotFoundException('Order not found.');
+      }
+
+      order.status = status;
+
+      const orderSaved = await manager.save(order);
+
+      if (!orderSaved) {
+        throw new BadRequestException('Error updating status');
+      }
+
+      return orderSaved;
     });
   }
 }

@@ -169,7 +169,7 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 ### Read One Order
-# @name readOrders
+# @name readOneOrder
 GET {{baseUrl}}/account/orders/05065f78-56be-4c1a-8413-fc99317cb535
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}

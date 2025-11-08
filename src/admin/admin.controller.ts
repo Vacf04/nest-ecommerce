@@ -2,9 +2,11 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -21,6 +23,9 @@ import { CreateCategoryDto } from 'src/category/dto/create-category.dto';
 import { CategoryResponseDto } from 'src/category/dto/category-response.dto';
 import { UpdateProductDto } from 'src/product/dto/update-product.dto';
 import { UpdateCategoryDto } from 'src/category/dto/update-category.dto';
+import { OrderService } from 'src/order/order.service';
+import { OrderResponseWithItemsDto } from 'src/order/dto/order-response-with-items.dto';
+import { Status } from 'src/order/entities/order.entity';
 
 @UseGuards(JwtAuthGuard, AdminGuard)
 @Controller('admin')
@@ -29,6 +34,7 @@ export class AdminController {
     private readonly productService: ProductService,
     private readonly userService: UserService,
     private readonly categoryService: CategoryService,
+    private readonly orderService: OrderService,
   ) {}
 
   @Post('users')
@@ -74,5 +80,23 @@ export class AdminController {
   async deleteCategory(@Param('id') id: string) {
     const category = await this.categoryService.delete(id);
     return new CategoryResponseDto(category);
+  }
+
+  @Get('orders')
+  async readOrders() {
+    const orders = await this.orderService.readAll();
+    return orders.map((order) => new OrderResponseWithItemsDto(order));
+  }
+
+  @Get('orders/:id')
+  async readOneOrder(@Param('id') orderId: string) {
+    const order = await this.orderService.readOneAdmin(orderId);
+    return new OrderResponseWithItemsDto(order);
+  }
+
+  @Put('orders/:id/status')
+  async updateStatus(@Param('id') orderId: string) {
+    const order = await this.orderService.updateStatus(orderId, Status.SHIPPED);
+    return new OrderResponseWithItemsDto(order);
   }
 }
