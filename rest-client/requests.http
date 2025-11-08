@@ -77,7 +77,8 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-    "name": "Blond"
+    "name": "Blond",
+    "stock": 50
 }
 
 ### Delete Product
@@ -124,7 +125,7 @@ Authorization: Bearer {{jwtToken}}
 
 {
     "productId": "e44ec94d-645c-403d-a050-2aa0ef26e222",
-    "quantity": 5
+    "quantity": 1
 }
 
 ### Read Cart Items
@@ -148,3 +149,29 @@ Authorization: Bearer {{jwtToken}}
 {
     "quantity": 99
 }
+
+### Checkout
+# @name checkout
+POST {{baseUrl}}/account/checkout
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+    "shippingAddress": {
+        "city": "Araruama"
+    }
+}
+
+### Read Orders
+# @name readOrders
+GET {{baseUrl}}/account/orders
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+### Read One Order
+# @name readOrders
+GET {{baseUrl}}/account/orders/05065f78-56be-4c1a-8413-fc99317cb535
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+

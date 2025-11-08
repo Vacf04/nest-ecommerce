@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { OrderItem } from './order-item.entity';
 
 export enum Status {
   PENDING = 'PENDING',
@@ -25,6 +27,9 @@ export class Order {
 
   @Column({ type: 'decimal' })
   total: number;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
+  orderItems: OrderItem[];
 
   @Column({
     enum: Status,

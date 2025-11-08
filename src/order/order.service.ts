@@ -79,4 +79,51 @@ export class OrderService {
       return orderSaved;
     });
   }
+
+  async read(userId: string) {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
+    return this.dataSource.transaction(async (manager) => {
+      const orders = await manager.find(Order, {
+        where: {
+          user: { id: user.id },
+        },
+        relations: ['orderItems', 'user'],
+      });
+
+      if (!orders) {
+        throw new NotFoundException('Orders not found.');
+      }
+
+      return orders;
+    });
+  }
+
+  async readOne(userId: string, orderId: string) {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
+    return this.dataSource.transaction(async (manager) => {
+      const order = await manager.findOne(Order, {
+        where: {
+          user: { id: user.id },
+          id: orderId,
+        },
+        relations: ['orderItems', 'user'],
+      });
+
+      if (!order) {
+        throw new NotFoundException('Order not found.');
+      }
+
+      return order;
+    });
+  }
 }

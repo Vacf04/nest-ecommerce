@@ -17,6 +17,8 @@ import { CartItemResponseDto } from 'src/cart/dto/cart-item-response.dto';
 import { UpdateCartItemDto } from 'src/cart/dto/update-cart-item.dto';
 import { CreateOrderDto } from 'src/order/dto/create-order.dto';
 import { OrderService } from 'src/order/order.service';
+import { OrderResponseDto } from 'src/order/dto/order-response.dto';
+import { OrderResponseWithItemsDto } from 'src/order/dto/order-response-with-items.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('account')
@@ -33,15 +35,6 @@ export class AccountController {
   ) {
     const cartItem = await this.cartService.create(req.user.id, dto);
     return new CartItemResponseDto(cartItem);
-  }
-
-  @Post('checkout')
-  async createOrder(
-    @Req() req: AuthenticatedRequest,
-    @Body() dto: CreateOrderDto,
-  ) {
-    const order = await this.orderService.create(req.user.id, dto);
-    return order;
   }
 
   @Get('cart')
@@ -67,5 +60,29 @@ export class AccountController {
   ) {
     const cartItem = await this.cartService.delete(req.user.id, cartItemId);
     return new CartItemResponseDto(cartItem);
+  }
+
+  @Post('checkout')
+  async createOrder(
+    @Req() req: AuthenticatedRequest,
+    @Body() dto: CreateOrderDto,
+  ) {
+    const order = await this.orderService.create(req.user.id, dto);
+    return new OrderResponseDto(order);
+  }
+
+  @Get('orders')
+  async readOrders(@Req() req: AuthenticatedRequest) {
+    const orders = await this.orderService.read(req.user.id);
+    return orders.map((order) => new OrderResponseWithItemsDto(order));
+  }
+
+  @Get('orders/:id')
+  async readOrder(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') orderId: string,
+  ) {
+    const order = await this.orderService.readOne(req.user.id, orderId);
+    return new OrderResponseWithItemsDto(order);
   }
 }
