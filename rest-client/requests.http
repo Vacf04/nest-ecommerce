@@ -55,6 +55,19 @@ Authorization: Bearer {{jwtToken}}
     "name": "Admin"
 }
 
+### Upload Image
+# @name uploadImage
+POST {{baseUrl}}/admin/upload/image
+Authorization: Bearer {{jwtToken}}
+Content-Type: multipart/form-data; boundary=----BryenFormBoundary
+
+------BryenFormBoundary
+Content-Disposition: form-data; name="file"; filename="image.png"
+Content-Type: image/png
+
+< ./teste.png
+------BryenFormBoundary--
+
 ### Create Product
 # @name createProduct
 POST {{baseUrl}}/admin/products
@@ -112,6 +125,13 @@ Authorization: Bearer {{jwtToken}}
 ### Delete Category
 # @name deleteCategory
 DELETE {{baseUrl}}/admin/categories/42737ca9-696c-4b78-8a56-15765a5a8a6f
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+### Read All Orders
+# @name readAllOrders
+
+GET {{baseUrl}}/admin/orders
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 

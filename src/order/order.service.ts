@@ -11,6 +11,8 @@ import { DataSource } from 'typeorm';
 import { Product } from 'src/product/entities/product.entity';
 import { CartItem } from 'src/cart/entities/cart-item.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { AdminOrdersQueryDto } from './dto/admin-orders-query.dto';
+import { OrderResponseWithItemsDto } from './dto/order-response-with-items.dto';
 
 @Injectable()
 export class OrderService {
@@ -127,17 +129,31 @@ export class OrderService {
     });
   }
 
-  async readAll() {
+  async readAll(query: AdminOrdersQueryDto) {
+    const { limit, page, status } = query;
     return this.dataSource.transaction(async (manager) => {
-      const orders = await manager.find(Order, {
+      const [orders, total] = await manager.findAndCount(Order, {
+        where: {
+          status: Status[status],
+        },
         relations: ['orderItems', 'user'],
+        take: limit,
+        skip: (page - 1) * limit,
       });
 
       if (!orders) {
         throw new NotFoundException('Orders not found.');
       }
 
-      return orders;
+      const totalPages = Math.ceil(total / limit);
+
+      return {
+        data: orders.map((item) => new OrderResponseWithItemsDto(item)),
+        totalItems: total,
+        itemsPerPage: limit,
+        currentPage: page,
+        totalPages: totalPages,
+      };
     });
   }
 

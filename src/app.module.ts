@@ -10,6 +10,7 @@ import { AdminModule } from './admin/admin.module';
 import { StoreModule } from './store/store.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { OrderModule } from './order/order.module';
     StoreModule,
     CartModule,
     OrderModule,
+    CloudinaryModule,
   ],
   controllers: [],
   providers: [],

@@ -2,12 +2,18 @@ import {
   Body,
   Controller,
   Delete,
+  FileTypeValidator,
   Get,
+  MaxFileSizeValidator,
   Param,
+  ParseFilePipe,
   Patch,
   Post,
   Put,
+  Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
@@ -26,6 +32,9 @@ import { UpdateCategoryDto } from 'src/category/dto/update-category.dto';
 import { OrderService } from 'src/order/order.service';
 import { OrderResponseWithItemsDto } from 'src/order/dto/order-response-with-items.dto';
 import { Status } from 'src/order/entities/order.entity';
+import { AdminOrdersQueryDto } from 'src/order/dto/admin-orders-query.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @UseGuards(JwtAuthGuard, AdminGuard)
 @Controller('admin')
@@ -35,6 +44,7 @@ export class AdminController {
     private readonly userService: UserService,
     private readonly categoryService: CategoryService,
     private readonly orderService: OrderService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   @Post('users')
@@ -83,9 +93,9 @@ export class AdminController {
   }
 
   @Get('orders')
-  async readOrders() {
-    const orders = await this.orderService.readAll();
-    return orders.map((order) => new OrderResponseWithItemsDto(order));
+  async readOrders(@Query() query: AdminOrdersQueryDto) {
+    const orders = await this.orderService.readAll(query);
+    return orders;
   }
 
   @Get('orders/:id')
@@ -98,5 +108,26 @@ export class AdminController {
   async updateStatus(@Param('id') orderId: string) {
     const order = await this.orderService.updateStatus(orderId, Status.SHIPPED);
     return new OrderResponseWithItemsDto(order);
+  }
+
+  @Post('upload/image')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 100000 }),
+          new FileTypeValidator({
+            fileType: /(image\/jpeg|image\/png|image\/gif|image\/webp)$/,
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    const response = await this.cloudinaryService.uploadFile(file);
+    return {
+      url: response.secure_url,
+    };
   }
 }
