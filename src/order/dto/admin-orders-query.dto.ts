@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
-import { IsOptional, IsString, IsInt, Min, IsIn } from 'class-validator';
+import { IsOptional, IsString, IsInt, Min } from 'class-validator';
+import { Status } from '../entities/order.entity';
 
 export class AdminOrdersQueryDto {
   @IsOptional()
@@ -16,6 +17,5 @@ export class AdminOrdersQueryDto {
 
   @IsOptional()
   @IsString()
-  @IsIn(['PENDING', 'SHIPPED', 'PAID', 'CANCELLED'])
-  status: string = 'PENDING';
+  status: Status = Status.PENDING;
 }

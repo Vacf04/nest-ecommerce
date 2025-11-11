@@ -2,6 +2,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   IsUrl,
   IsUUID,
@@ -19,7 +20,8 @@ export class CreateProductDto {
   @Length(1, 500)
   description: string;
 
-  @IsString()
+  @IsNumber()
+  @IsPositive()
   @IsNotEmpty()
   price: number;
 
