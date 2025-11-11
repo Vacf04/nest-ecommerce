@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import {
   UploadApiErrorResponse,
   UploadApiResponse,
@@ -7,6 +7,11 @@ import {
 import * as streamifier from 'streamifier';
 
 export type CloudinaryResponse = UploadApiResponse | UploadApiErrorResponse;
+
+export type CloudinaryDeleteResponse = {
+  result: 'ok' | 'not found' | string;
+  [key: string]: any;
+};
 
 @Injectable()
 export class CloudinaryService {
@@ -30,6 +35,26 @@ export class CloudinaryService {
       );
 
       streamifier.createReadStream(file.buffer).pipe(uploadStream);
+    });
+  }
+
+  deleteFile(publicId: string): Promise<CloudinaryDeleteResponse> {
+    return new Promise<CloudinaryDeleteResponse>((resolve, reject) => {
+      cloudinary.uploader.destroy(publicId, (error, result) => {
+        if (error) {
+          return reject(error);
+        }
+
+        if (!result) {
+          return reject(
+            new InternalServerErrorException(
+              'Cloudinary delete failed: No result returned.',
+            ),
+          );
+        }
+
+        resolve(result as CloudinaryDeleteResponse);
+      });
     });
   }
 }

@@ -128,6 +128,7 @@ export class AdminController {
     const response = await this.cloudinaryService.uploadFile(file);
     return {
       url: response.secure_url,
+      public_id: response.public_id,
     };
   }
 }

@@ -28,7 +28,10 @@ export class Product {
   @Column({ nullable: true })
   imageUrl: string;
 
-  @ManyToOne(() => Category, { onDelete: 'CASCADE' })
+  @Column({ nullable: true })
+  imageId: string;
+
+  @ManyToOne(() => Category, { onDelete: 'SET NULL' })
   category: Category;
 
   @CreateDateColumn()

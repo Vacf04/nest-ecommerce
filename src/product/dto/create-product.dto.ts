@@ -31,6 +31,10 @@ export class CreateProductDto {
   @IsUrl({ require_tld: false })
   imageUrl: string;
 
+  @IsOptional()
+  @IsString()
+  imageId: string;
+
   @IsUUID()
   @IsNotEmpty()
   categoryId: string;

@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
@@ -7,13 +12,16 @@ import { CategoryService } from 'src/category/category.service';
 import { ProductQueryDto } from 'src/store/dto/product-query.dto';
 import { ProductResponseDto } from './dto/product-response.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class ProductService {
+  private readonly logger = new Logger(ProductService.name);
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
     private readonly categoryService: CategoryService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   async findByIdOrFail(id: string) {
@@ -83,6 +91,7 @@ export class ProductService {
     product.name = dto.name ?? product.name;
     product.price = dto.price ?? product.price;
     product.imageUrl = dto.imageUrl ?? product.imageUrl;
+    product.imageId = dto.imageId ?? product.imageId;
     product.stock = dto.stock ?? product.stock;
     product.description = dto.description ?? product.description;
 
@@ -98,6 +107,19 @@ export class ProductService {
 
   async delete(id: string) {
     const product = await this.findByIdOrFail(id);
-    return await this.productRepository.remove(product);
+    const deleted = await this.productRepository.remove(product);
+
+    if (deleted && product.imageId) {
+      try {
+        await this.cloudinaryService.deleteFile(product.imageId);
+      } catch (error) {
+        this.logger.error(
+          `The image has not be deleted from cloudinary.`,
+          error.stack,
+        );
+      }
+    }
+
+    return deleted;
   }
 }
