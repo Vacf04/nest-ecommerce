@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:3000
+@baseUrl = http://localhost:3001
 @jwtToken = {{authLogin.response.body.token}}
 
 # STORE ########################################################################
@@ -41,6 +41,13 @@ Content-Type: application/json
     "name": "Vittor"
 }
 
+### Auth  me
+# @name authMe
+GET {{baseUrl}}/auth/me
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+
 # ADMIN ########################################################################
 
 ### Admin register
@@ -62,10 +69,10 @@ Authorization: Bearer {{jwtToken}}
 Content-Type: multipart/form-data; boundary=----BryenFormBoundary
 
 ------BryenFormBoundary
-Content-Disposition: form-data; name="file"; filename="image.png"
-Content-Type: image/png
+Content-Disposition: form-data; name="file"; filename="image.jgp"
+Content-Type: image/jpg
 
-< ./teste.png
+< ./teste.jpg
 ------BryenFormBoundary--
 
 ### Create Product
@@ -76,11 +83,12 @@ Authorization: Bearer {{jwtToken}}
 
 {
     "name": "Blonde",
-    "description": "a perfect album",
-    "price": "1.99",
+    "description": "a perfect album by frank ocean",
+    "price": 100,
     "stock": 100,
-    "imageUrl": "http://localhost:3000",
-    "categoryId": "42737ca9-696c-4b78-8a56-15765a5a8a6f"
+    "imageUrl": "https://res.cloudinary.com/devll4edo/image/upload/v1762823224/nest-ecommerce/kjujinmuhfm1qxfeubst.jpg",
+    "imageId": "nest-ecommerce/kjujinmuhfm1qxfeubst",
+    "categoryId": "9ea66251-0673-4933-bb0b-f0def672f4b3"
 }
 
 ### Update Product
@@ -96,7 +104,7 @@ Authorization: Bearer {{jwtToken}}
 
 ### Delete Product
 # @name deleteProduct
-DELETE {{baseUrl}}/admin/products/ae563119-50fb-41be-a385-272d50222077
+DELETE {{baseUrl}}/admin/products/1effb590-3e03-49a7-a8a3-bf51e1d1d74f
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
