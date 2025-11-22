@@ -13,7 +13,19 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @IsStrongPassword()
+  @IsStrongPassword(
+    {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 0,
+    },
+    {
+      message:
+        'Password must be at least 8 characters long and contain uppercase letters, lowercase letters, and numbers.',
+    },
+  )
   @IsNotEmpty()
   password: string;
 }
